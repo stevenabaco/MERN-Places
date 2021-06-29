@@ -1,0 +1,19 @@
+{
+  "name": "react-places-rest-api",
+  "version": "1.0.0",
+  "description": "REST API backend for Rest Places App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stevenabaco/React-Places-REST-API.git"
+  },
+  "author": "Steven Abaco",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stevenabaco/React-Places-REST-API/issues"
+  },
+  "homepage": "https://github.com/stevenabaco/React-Places-REST-API#readme"
+}
