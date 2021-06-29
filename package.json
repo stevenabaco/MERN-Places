@@ -2,9 +2,10 @@
   "name": "react-places-rest-api",
   "version": "1.0.0",
   "description": "REST API backend for Rest Places App",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "script": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/stevenabaco/React-Places-REST-API/issues"
   },
-  "homepage": "https://github.com/stevenabaco/React-Places-REST-API#readme"
+  "homepage": "https://github.com/stevenabaco/React-Places-REST-API#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
 }
