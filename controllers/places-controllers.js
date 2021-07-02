@@ -1,8 +1,8 @@
-const { v4: uuidv4 } = require('uuid')
+const { v4: uuidv4 } = require('uuid');
 
 const HttpError = require('../models/http-error');
 
-const DUMMY_PLACES = [
+let DUMMY_PLACES = [
 	{
 		id: 'p1',
 		title: 'Empire State Building',
@@ -56,21 +56,19 @@ const createPlace = (req, res, next) => {
 		description,
 		location: coordinates,
 		address,
-		creator
+		creator,
 	};
 
 	DUMMY_PLACES.push(createdPlace); // or can use ... unshift(createdPlace)
-	res.status(201).json({place: createdPlace}) // update status to successfully created (201 status)
-
+	res.status(201).json({ place: createdPlace }); // update status to successfully created (201 status)
 };
 
 const updatePlace = (req, res, next) => {
-
 	const { title, description } = req.body;
-	const placeId = req.params.pid
+	const placeId = req.params.pid;
 
-	const updatedPlace = {...DUMMY_PLACES.find(p => p.id === placeId)} // Curly braces creates new object with found place
-	const placeIndex = DUMMY_PLACES.findIndex(p => p.id === placeId) // Find and return the index of the place in the array
+	const updatedPlace = { ...DUMMY_PLACES.find(p => p.id === placeId) }; // Curly braces creates new object with found place
+	const placeIndex = DUMMY_PLACES.findIndex(p => p.id === placeId); // Find and return the index of the place in the array
 	updatedPlace.title = title;
 	updatedPlace.description = description;
 
@@ -80,19 +78,15 @@ const updatePlace = (req, res, next) => {
 		return next(
 			new HttpError('Could not find a place for the provided user id.', 404)
 		);
-
-	 
 	}
-
 };
 
-const deletePlace = ((req, res, next) => {
-	
-});
+const deletePlace = (req, res, next) => {
+	const placeId = req.params.pid;
+	DUMMY_PLACES = DUMMY_PLACES.filter(p => p.id !== placeId); // Creates a new filtered array without the selected item
+	res.status(200).json({ message: 'Deleted Place successfully!' });
+};
 
-	
-	
-	
 exports.getPlaceById = getPlaceById;
 exports.getPlaceByUserId = getPlaceByUserId;
 exports.createPlace = createPlace;
