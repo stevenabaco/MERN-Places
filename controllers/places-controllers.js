@@ -64,6 +64,37 @@ const createPlace = (req, res, next) => {
 
 };
 
+const updatePlace = (req, res, next) => {
+
+	const { title, description } = req.body;
+	const placeId = req.params.pid
+
+	const updatedPlace = {...DUMMY_PLACES.find(p => p.id === placeId)} // Curly braces creates new object with found place
+	const placeIndex = DUMMY_PLACES.findIndex(p => p.id === placeId) // Find and return the index of the place in the array
+	updatedPlace.title = title;
+	updatedPlace.description = description;
+
+	DUMMY_PLACES[placeIndex] = updatedPlace;
+	res.status(200).json({ place: updatedPlace });
+	if (!place) {
+		return next(
+			new HttpError('Could not find a place for the provided user id.', 404)
+		);
+
+	 
+	}
+
+};
+
+const deletePlace = ((req, res, next) => {
+	
+});
+
+	
+	
+	
 exports.getPlaceById = getPlaceById;
 exports.getPlaceByUserId = getPlaceByUserId;
 exports.createPlace = createPlace;
+exports.updatePlace = updatePlace;
+exports.deletePlace = deletePlace;
