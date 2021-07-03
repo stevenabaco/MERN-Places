@@ -45,7 +45,6 @@ const getPlacesByUserId = (req, res, next) => {
 			new HttpError('Could not find any places for the provided user id.', 404)
 		);
 	}
-
 	res.json({ places }); //
 };
 
