@@ -30,7 +30,7 @@ app.use((error, req, res, next) => {
 
 mongoose
 	.connect(
-		`mongodb+srv://Wizard:${process.env.DB_PASS}@cluster0.m9rfm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
+		`mongodb+srv://Wizard:${process.env.DB_PASS}@cluster0.m9rfm.mongodb.net/places?retryWrites=true&w=majority`,
 		{ useNewUrlParser: true, useUnifiedTopology: true }
 	)
 	.then(() => {
