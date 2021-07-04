@@ -1,7 +1,7 @@
 // Import third party packages
-require('dotenv').config()
+require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 // Import dependencies
 const placesRoutes = require('./routes/places-routes');
 const usersRoutes = require('./routes/users-routes');
@@ -28,4 +28,14 @@ app.use((error, req, res, next) => {
 	res.json({ message: error.message || 'An unknown error occured!' });
 });
 
-app.listen(5000);
+mongoose
+	.connect(
+		`mongodb+srv://Wizard:${process.env.DB_PASS}@cluster0.m9rfm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
+		{ useNewUrlParser: true, useUnifiedTopology: true }
+	)
+	.then(() => {
+		app.listen(5000);
+	})
+	.catch(err => {
+		console.log(err);
+	});
