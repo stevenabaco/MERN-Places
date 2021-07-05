@@ -1,17 +1,8 @@
 const HttpError = require('../models/http-error');
-const { v4: uuidv4 } = require('uuid');
+// const { v4: uuidv4 } = require('uuid'); // Removed after adding mongoose
 const { validationResult } = require('express-validator');
 
 const User = require('../models/user');
-
-const DUMMY_USERS = [
-	{
-		id: 'u1',
-		name: 'Steven Abaco',
-		email: 'test@test.com',
-		password: '123456',
-	},
-];
 
 const getUsers = async (req, res, next) => {
 	let users;

@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuid');
+// const { v4: uuidv4 } = require('uuid'); // removed after adding mongoose
 
 const { validationResult } = require('express-validator');
 
@@ -8,22 +8,8 @@ const Place = require('../models/place');
 const User = require('../models/user');
 const mongoose = require('mongoose');
 
-let DUMMY_PLACES = [
-	{
-		id: 'p1',
-		title: 'Empire State Building',
-		description: 'One of the most famous sky scrapers in the world!',
-		location: {
-			lat: 40.7484474,
-			lng: -73.9871516,
-		},
-		address: '20 W 34th St, New York, NY 10001',
-		creator: 'u1',
-	},
-];
-
 const getPlaceById = async (req, res, next) => {
-	const placeId = req.params.pid; // { pid: 'p1' }
+	const placeId = req.params.pid;
 	let place;
 	try {
 		place = await Place.findById(placeId);
@@ -63,7 +49,7 @@ const getPlacesByUserId = async (req, res, next) => {
 		);
 		return next(error);
 	}
-
+	// if (!places || places.length === 0)
 	if (!userWithPlaces || userWithPlaces.places.length === 0) {
 		return next(
 			new HttpError('Could not find any places for the provided user id.', 404)
