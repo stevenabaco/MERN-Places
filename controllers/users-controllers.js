@@ -19,23 +19,26 @@ const getUsers = async (req, res, next) => {
 		users = await User.find({}, '-password');
 	} catch (err) {
 		const error = new HttpError(
-			'Fetching users failed, please try again later.', 500
-		)
+			'Fetching users failed, please try again later.',
+			500
+		);
 		return next(error);
 	}
-	res.json({users: users.map(user => user.toObject({getsetters: true}))})
+	res.json({ users: users.map(user => user.toObject({ getsetters: true })) });
 };
 
 const signup = async (req, res, next) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		console.log(errors);
-		return next( new HttpError(
-			'Invalid inputs, please check the information you entered.',
-			422) 
+		return next(
+			new HttpError(
+				'Invalid inputs, please check the information you entered.',
+				422
+			)
 		);
 	}
-	const { name, email, password, places } = req.body;
+	const { name, email, password } = req.body;
 
 	// Check to see email already exists
 	let existingUser;
@@ -63,7 +66,7 @@ const signup = async (req, res, next) => {
 		email,
 		image: 'https://avatars.githubusercontent.com/u/52642808?v=4',
 		password,
-		places,
+		places: [],
 	});
 
 	try {
@@ -76,32 +79,33 @@ const signup = async (req, res, next) => {
 		return next(error);
 	}
 
-	res.status(201).json({ user: createdUser.toObject({ getters: true}) });
+	res.status(201).json({ user: createdUser.toObject({ getters: true }) });
 };
 
 const login = async (req, res, next) => {
 	const { email, password } = req.body;
 
 	let existingUser;
-	
-		try { //Check if email address is valid
-			existingUser = await User.findOne({ email: email });
-		} catch (err) {
-			const error = new HttpError(
-				'Logging in failed, please try again later',
-				500
-			);
-			return next(error);
-		}
-	
+
+	try {
+		//Check if email address is valid
+		existingUser = await User.findOne({ email: email });
+	} catch (err) {
+		const error = new HttpError(
+			'Logging in failed, please try again later',
+			500
+		);
+		return next(error);
+	}
+
 	// Temp validation just to check if email and password match... will be updated
 	if (!existingUser || existingUser.password !== password) {
 		const error = new HttpError(
 			'Invalid credentials, could not log you in.',
 			401
-		)
-		return next(error)
-		}
+		);
+		return next(error);
+	}
 	res.json({ message: 'Logged in successfully!' });
 };
 
