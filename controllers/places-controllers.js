@@ -106,7 +106,7 @@ const createPlace = async (req, res, next) => {
 	res.status(201).json({ place: createdPlace }); // update status to successfully created (201 status)
 };
 
-const updatePlace = (req, res, next) => {
+const updatePlace = async (req, res, next) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		console.log(errors);
@@ -118,13 +118,28 @@ const updatePlace = (req, res, next) => {
 	const { title, description } = req.body;
 	const placeId = req.params.pid;
 
-	const updatedPlace = { ...DUMMY_PLACES.find(p => p.id === placeId) }; // Curly braces creates new object with found place
-	const placeIndex = DUMMY_PLACES.findIndex(p => p.id === placeId); // Find and return the index of the place in the array
-	updatedPlace.title = title;
-	updatedPlace.description = description;
+	let place;
+	try {
+		place = await Place.findById(placeId);
+	} catch (err) {
+		const error = new HttpError(
+			'Something went wrong, could not update place.', 500
+		)
+		return next(error);
+	}
+	place.title = title;
+	place.description = description;
 
-	DUMMY_PLACES[placeIndex] = updatedPlace;
-	res.status(200).json({ place: updatedPlace });
+	try {
+		await place.save();
+	} catch (err) {
+		const error = new HttpError(
+			'Something went wrong, could not update place.', 500
+		)
+		return next(error);
+	}
+
+	res.status(200).json({ place: place.toObject({ getters: true}) });
 };
 
 const deletePlace = (req, res, next) => {
