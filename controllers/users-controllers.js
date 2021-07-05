@@ -1,5 +1,5 @@
 const HttpError = require('../models/http-error');
-// const { v4: uuidv4 } = require('uuid'); // Removed after adding mongoose
+const { v4: uuidv4 } = require('uuid'); // Removed after adding mongoose
 const { validationResult } = require('express-validator');
 
 const User = require('../models/user');

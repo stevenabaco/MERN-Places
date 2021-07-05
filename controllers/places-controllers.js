@@ -1,4 +1,4 @@
-// const { v4: uuidv4 } = require('uuid'); // removed after adding mongoose
+const { v4: uuidv4 } = require('uuid'); // removed after adding mongoose
 
 const { validationResult } = require('express-validator');
 
