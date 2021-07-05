@@ -31,7 +31,12 @@ app.use((error, req, res, next) => {
 mongoose
 	.connect(
 		`mongodb+srv://Wizard:${process.env.DB_PASS}@cluster0.m9rfm.mongodb.net/places?retryWrites=true&w=majority`,
-		{ useNewUrlParser: true, useUnifiedTopology: true }
+		{
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+			useFindAndModify: false,
+			useCreateIndex: true,
+		}
 	)
 	.then(() => {
 		app.listen(5000);
