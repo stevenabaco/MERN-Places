@@ -1,7 +1,6 @@
-const HttpError = require('../models/http-error');
-const { v4: uuidv4 } = require('uuid'); // Removed after adding mongoose
 const { validationResult } = require('express-validator');
-
+const HttpError = require('../models/http-error');
+// const { v4: uuidv4 } = require('uuid'); // Removed after adding mongoose
 const User = require('../models/user');
 
 const getUsers = async (req, res, next) => {
@@ -15,13 +14,12 @@ const getUsers = async (req, res, next) => {
 		);
 		return next(error);
 	}
-	res.json({ users: users.map(user => user.toObject({ getsetters: true })) });
+	res.json({ users: users.map(user => user.toObject({ getters: true })) });
 };
 
 const signup = async (req, res, next) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
-		console.log(errors);
 		return next(
 			new HttpError(
 				'Invalid inputs, please check the information you entered.',
@@ -52,7 +50,6 @@ const signup = async (req, res, next) => {
 	}
 
 	const createdUser = new User({
-		id: uuidv4(),
 		name, // name: name
 		email,
 		image: 'https://avatars.githubusercontent.com/u/52642808?v=4',
