@@ -1,5 +1,4 @@
-const { v4: uuidv4 } = require('uuid'); // removed after adding mongoose
-
+const fs = require('fs');
 const { validationResult } = require('express-validator');
 
 const HttpError = require('../models/http-error');
@@ -55,7 +54,11 @@ const getPlacesByUserId = async (req, res, next) => {
 			new HttpError('Could not find any places for the provided user id.', 404)
 		);
 	}
-	res.json({ places: userWithPlaces.places.map(place => place.toObject({ getters: true })) });
+	res.json({
+		places: userWithPlaces.places.map(place =>
+			place.toObject({ getters: true })
+		),
+	});
 };
 
 const createPlace = async (req, res, next) => {
@@ -184,6 +187,8 @@ const deletePlace = async (req, res, next) => {
 		return next(error);
 	}
 
+	const imagePath = place.image;
+
 	try {
 		const sess = await mongoose.startSession();
 		sess.startTransaction();
@@ -198,6 +203,11 @@ const deletePlace = async (req, res, next) => {
 		);
 		return next(error);
 	}
+
+	fs.unlink(imagePath, err => {
+		console.log(err);
+	});
+
 	res.status(200).json({ message: 'Deleted Place successfully!' });
 };
 
