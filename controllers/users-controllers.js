@@ -20,6 +20,7 @@ const getUsers = async (req, res, next) => {
 const signup = async (req, res, next) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
+
 		return next(
 			new HttpError(
 				'Invalid inputs, please check the information you entered.',
@@ -52,7 +53,7 @@ const signup = async (req, res, next) => {
 	const createdUser = new User({
 		name, // name: name
 		email,
-		image: 'https://avatars.githubusercontent.com/u/52642808?v=4',
+		image: req.file.path,
 		password,
 		places: [],
 	});
