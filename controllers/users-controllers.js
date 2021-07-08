@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const HttpError = require('../models/http-error');
 // const { v4: uuidv4 } = require('uuid'); // Removed after adding mongoose
 const User = require('../models/user');
@@ -76,7 +77,31 @@ const signup = async (req, res, next) => {
 		return next(error);
 	}
 
-	res.status(201).json({ user: createdUser.toObject({ getters: true }) });
+	// Generate token with userId and email
+
+	let token;
+	try {
+		token = jwt.sign(
+			{
+				userId: createdUser.id,
+				email: createdUser.email,
+			},
+			'supersecret_dont_share',
+			{ expiresIn: '1hr' }
+		);
+	} catch (err) {
+		const error = new HttpError(
+			'Signing up new user failed, please try again.',
+			500
+		);
+		return next(error);
+	}
+	// Respond using JSON with what should be returned..
+	res.status(201).json({
+		userId: createdUser.id,
+		email: createdUser.email,
+		token: token,
+	});
 };
 
 const login = async (req, res, next) => {
@@ -104,6 +129,8 @@ const login = async (req, res, next) => {
 		return next(error);
 	}
 
+
+
 	let isValidPassword = false;
 	try {
 		isValidPassword = await bcrypt.compare(password, existingUser.password); // Returns a BOOLEAN. Compares the entered password to the existing user password.
@@ -122,11 +149,27 @@ const login = async (req, res, next) => {
 		);
 	}
 
-	
-
+	let token;
+	try {
+		token = jwt.sign(
+			{
+				userId: existingUser.id,
+				email: existingUser.email,
+			},
+			'supersecret_dont_share',
+			{ expiresIn: '1hr' }
+		);
+	} catch (err) {
+		const error = new HttpError(
+			'Logging in new user failed, please try again.',
+			500
+		);
+		return next(error);
+	}
 	res.json({
-		message: 'Logged in successfully!',
-		user: existingUser.toObject({ getters: true }),
+		email: existingUser.email,
+		userId: existingUser.id,
+		token: token
 	});
 };
 
