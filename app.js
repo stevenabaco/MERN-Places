@@ -49,7 +49,7 @@ app.use((error, req, res, next) => { // Middleware to handle errors
 
 mongoose
 	.connect(
-		`mongodb+srv://Wizard:${process.env.DB_PASS}@cluster0.m9rfm.mongodb.net/MERN_Places?retryWrites=true&w=majority`,
+		`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.m9rfm.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
 		{
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
