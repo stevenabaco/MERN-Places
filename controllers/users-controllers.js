@@ -56,7 +56,7 @@ const signup = async (req, res, next) => {
 		hashedPassword = await bcrypt.hash(password, 12); // Returns a promise, first arguement is what needs to be hashed. Second Arguement is how many rounds
 	} catch (err) {
 		const error = new HttpError('Could not create user, please try again', 500);
-		return nextZ(error);
+		return next(error);
 	}
 
 	const createdUser = new User({
@@ -84,10 +84,10 @@ const signup = async (req, res, next) => {
 		token = jwt.sign(
 			{
 				userId: createdUser.id,
-				email: createdUser.email,
+				email: createdUser.email
 			},
 			'supersecret_dont_share',
-			{ expiresIn: '1hr' }
+			{ expiresIn: '1h' }
 		);
 	} catch (err) {
 		const error = new HttpError(
@@ -121,15 +121,13 @@ const login = async (req, res, next) => {
 	}
 
 	// Temp validation just to check if email and password match... will be updated
-	if (!existingUser || existingUser.password !== password) {
+	if (!existingUser) {
 		const error = new HttpError(
 			'Invalid credentials, could not log you in.',
 			401
 		);
 		return next(error);
 	}
-
-
 
 	let isValidPassword = false;
 	try {
@@ -157,19 +155,19 @@ const login = async (req, res, next) => {
 				email: existingUser.email,
 			},
 			'supersecret_dont_share',
-			{ expiresIn: '1hr' }
+			{ expiresIn: '1h' }
 		);
 	} catch (err) {
 		const error = new HttpError(
-			'Logging in new user failed, please try again.',
+			'Logging in failed, please try again.',
 			500
 		);
 		return next(error);
 	}
 	res.json({
-		email: existingUser.email,
 		userId: existingUser.id,
-		token: token
+		email: existingUser.email,
+		token: token,
 	});
 };
 
