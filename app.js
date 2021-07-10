@@ -14,31 +14,39 @@ const app = express();
 
 app.use(express.json());
 
-app.use('/uploads/images', express.static(path.join('uploads', 'images')))
+app.use('/uploads/images', express.static(path.join('uploads', 'images')));
+app.use(express.static(path.join('public')));
 
-app.use((req, res, next) => {
-	res.setHeader('Access-Control-Allow-Origin', '*');
-	res.setHeader(
-		'Access-Control-Allow-Headers',
-		'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-	);
-	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE')
-	next();
-});
+// CORS HEADERS -- ONLY NEED IF BACKEND SERVED ON SEPERATE SERVER
+// app.use((req, res, next) => {
+// 	res.setHeader('Access-Control-Allow-Origin', '*');
+// 	res.setHeader(
+// 		'Access-Control-Allow-Headers',
+// 		'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+// 	);
+// 	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE')
+// 	next();
+// });
 
 app.use('/api/places', placesRoutes); // => /api/places...
 app.use('/api/users', usersRoutes); // => /api/users...
 
 app.use((req, res, next) => {
-	const error = new HttpError('Could not find this route.', 404);
-	throw error;
+	res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 });
 
-app.use((error, req, res, next) => { // Middleware to handle errors
-	if (req.file) { // Do not allow files to be uploaded if errors exist
-		fs.unlink(req.file.path, (err) => {
+// app.use((req, res, next) => {
+// 	const error = new HttpError('Could not find this route.', 404);
+// 	throw error;
+// });
+
+app.use((error, req, res, next) => {
+	// Middleware to handle errors
+	if (req.file) {
+		// Do not allow files to be uploaded if errors exist
+		fs.unlink(req.file.path, err => {
 			console.log(err);
-		})
+		});
 	}
 	if (res.headerSent) {
 		return next(error);
