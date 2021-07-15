@@ -2,3 +2,4 @@ node_modules
 .ds
 .env
 nodemon.json
+.production

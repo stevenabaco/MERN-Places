@@ -15,7 +15,7 @@ const app = express();
 app.use(express.json());
 
 app.use('/uploads/images', express.static(path.join('uploads', 'images')));
-app.use(express.static(path.join('public')));
+app.use(express.static(path.join('public'))); // Only need this for same server setup
 
 //CORS HEADERS -- ONLY NEED IF BACKEND SERVED ON SEPERATE SERVER
 app.use((req, res, next) => {
@@ -24,21 +24,23 @@ app.use((req, res, next) => {
 		'Access-Control-Allow-Headers',
 		'Origin, X-Requested-With, Content-Type, Accept, Authorization'
 	);
-	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE')
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
 	next();
 });
 
 app.use('/api/places', placesRoutes); // => /api/places...
 app.use('/api/users', usersRoutes); // => /api/users...
 
+// Code for single server hosting only where Frontend is put in publid folder
 app.use((req, res, next) => {
 	res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 });
 
-app.use((req, res, next) => {
-	const error = new HttpError('Could not find this route.', 404);
-	throw error;
-});
+// Code to handle errors only if back end is seperated from frontend
+// app.use((req, res, next) => {
+// 	const error = new HttpError('Could not find this route.', 404);
+// 	throw error;
+// });
 
 app.use((error, req, res, next) => {
 	// Middleware to handle errors
